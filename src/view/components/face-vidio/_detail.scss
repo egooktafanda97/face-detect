@@ -1,0 +1,28 @@
+.list-group-item{
+    padding: 5px !important;
+}
+.D-master{
+   width: 100% !important;
+   display: flex;
+   border:1px solid #ccc;
+   border-radius: 10px;
+    .D-key{
+        width: 30% !important;
+        text-align: left;
+        display: flex;
+        align-items: top;
+        text-align: left !important;
+    }
+    .D-dot{
+        width: 1% !important;
+        display: flex;
+        align-items: top;
+    }
+    .D-val{
+        width: 69% !important;
+        display: flex;
+        align-items: top;
+        padding-left: 5px;
+        text-align: left !important;
+    }
+}
