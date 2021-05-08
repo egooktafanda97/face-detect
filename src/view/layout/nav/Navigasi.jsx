@@ -1,5 +1,6 @@
 import React from "react";
 import "./css.scss";
+import { Router, Route, Link, Switch, NavLink } from "react-router-dom";
 
 const HeaderNav = () => {
   return (
@@ -13,7 +14,8 @@ const NavItem = (props) => {
   return (
     <div className='M-navItems'>
       <div className={"C-navItems " + props.active}>
-        <span className='fa fa-user'></span> <span>{props.title}</span>
+        <i className={props.icon} aria-hidden='true'></i>{" "}
+        <span>{props.title}</span>
       </div>
     </div>
   );
@@ -22,14 +24,25 @@ const NavItem = (props) => {
 export default function Navigasi() {
   return (
     <div id='c-nav'>
-      <div>
+      <div className='navs'>
         <HeaderNav />
         <div className='s-title'></div>
-        <NavItem title='Dashboard' />
-        <NavItem title='Data Anak Pacu' active="active" />
-        <NavItem title='Laporan' />
-        <NavItem title='Pengaturan' />
-        <NavItem title='Logout' />
+
+        <NavLink to='/'>
+          <NavItem title='Home' icon='fa fa-home' />
+        </NavLink>
+        <NavLink to='/input_jalur'>
+          <NavItem title='Input Jalur' icon='fa fa-home' />
+        </NavLink>
+        <NavLink to='/input_anak_pacu'>
+          <NavItem title='Data Anak Pacu' icon='fa fa-database' />
+        </NavLink>
+        <NavLink to='/laporan'>
+          <NavItem title='Laporan' icon='fa fa-file' />
+        </NavLink>
+
+        <NavItem title='Pengaturan' icon='fa fa-cog' />
+        <NavItem title='Logout' icon='fas fa-sign-out-alt' />
       </div>
     </div>
   );

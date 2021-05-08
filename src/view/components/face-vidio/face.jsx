@@ -1,24 +1,59 @@
 import React from "react";
 import css from "./_css.scss";
 import $ from "jquery";
-// import '@tensorflow/tfjs-node';
 import * as canvas from "canvas";
 import * as faceapi from "face-api.js";
 import ego from "../assets/img/ego.jpg";
-import Vego from "../assets/video/mp_1.mp4";
-import Vegi from "../assets/video/egi.mp4";
 import ReactDom from "react-dom";
 import Card from "react-bootstrap/Card";
+import axios from "axios";
+
+import UseImg from "../../../Helpers/dependencies";
+
+// /////////// vidio /////////
+
+import Vego from "../assets/video/mp_1.mp4";
+import Vegi from "../assets/video/egi.mp4";
+import TOmpul from "../assets/video/tompul.mp4";
+
+// /////////////////////////
+
 var times = null;
 export default class FaceVidio extends React.Component {
   constructor(props) {
-    let IdisplaySize;
     super(props);
     this.state = {
       dataCenter: this.props.resultData,
       vd: null,
+      // resultData: this.props.resultData,
     };
   }
+  imageToBase64 = (URL) => {
+    let image;
+    image = new Image();
+    image.crossOrigin = "Anonymous";
+    image.addEventListener("load", function () {
+      let canvas = document.createElement("canvas");
+      let context = canvas.getContext("2d");
+      canvas.width = image.width;
+      canvas.height = image.height;
+      context.drawImage(image, 0, 0);
+      try {
+        localStorage.setItem(
+          "saved-image-example",
+          canvas.toDataURL("image/png")
+        );
+      } catch (err) {
+        console.error(err);
+      }
+    });
+    image.src = URL;
+  };
+  // componentDidUpdate = () => {
+  //   this.setState({
+  //     resultData : this.props.resultData
+  //   });
+  // };
   hendlerDataUp = (newData) => {
     this.state.dataCenter.forEach((rowData, i) => {
       if (rowData.img == newData) {
@@ -26,6 +61,10 @@ export default class FaceVidio extends React.Component {
       }
     });
     this.props.result(newData);
+  };
+
+  hendlerMissingData = (data) => {
+    console.log(data);
   };
 
   hendlerPuhData = () => {
@@ -42,7 +81,7 @@ export default class FaceVidio extends React.Component {
     let canvas = $("#canvas").get(0);
     let ii = 1;
     times = setInterval(async () => {
-      console.log(ii++);
+      ii++;
       let fullFaceDescriptions = await faceapi
         .detectAllFaces(video)
         .withFaceLandmarks()
@@ -55,57 +94,63 @@ export default class FaceVidio extends React.Component {
         displaySize
       );
       // faceapi.draw.drawDetections(canvas, fullFaceDescriptions)
-      console.log(this.state.dataCenter);
       let ar = [];
-      this.state.dataCenter.map((aws, i) => {
-        // console.log(aws);
-        ar.push(aws.img);
+      this.props.resultData.map((aws, i) => {
+        // console.log(UseImg(aws.foto));
+        ar.push(UseImg(aws.foto));
       });
       // console.log(ar);
       const labels = ar;
-
+      console.log(labels);
       const labeledFaceDescriptors = await Promise.all(
         labels.map(async (label) => {
           // fetch image data from urls and convert blob to HTMLImage element
-          const imgUrl = `/assets/img/${label}.JPG`;
+          const imgUrl = `/assets/img/ego.JPG`;
+          // const imgUrl = `${label}`;
           const img = await faceapi.fetchImage(imgUrl);
-          // console.log(imgUrl);
+          console.log(img);
 
           // detect the face with the highest score in the image and compute it's landmarks and face descriptor
-          const fullFaceDescription = await faceapi
-            .detectSingleFace(img)
-            .withFaceLandmarks()
-            .withFaceDescriptor();
+          // const fullFaceDescription = await faceapi
+          //   .detectSingleFace(img)
+          //   .withFaceLandmarks()
+          //   .withFaceDescriptor();
 
-          if (!fullFaceDescription) {
-            throw new Error(`no faces detected for ${label}`);
-          }
-          const faceDescriptors = [fullFaceDescription.descriptor];
-          return new faceapi.LabeledFaceDescriptors(label, faceDescriptors);
+          // if (!fullFaceDescription) {
+          //   throw new Error(`no faces detected for ${label}`);
+          // }
+          // const faceDescriptors = [fullFaceDescription.descriptor];
+          // return new faceapi.LabeledFaceDescriptors(label, faceDescriptors);
         })
       );
 
-      const maxDescriptorDistance = 0.5;
-      const faceMatcher = new faceapi.FaceMatcher(
-        labeledFaceDescriptors,
-        maxDescriptorDistance
-      );
+      // const maxDescriptorDistance = 0.5;
+      // const faceMatcher = new faceapi.FaceMatcher(
+      //   labeledFaceDescriptors,
+      //   maxDescriptorDistance
+      // );
 
-      const results = fullFaceDescriptions.map((fd) =>
-        faceMatcher.findBestMatch(fd.descriptor)
-      );
+      // const results = fullFaceDescriptions.map((fd) =>
+      //   faceMatcher.findBestMatch(fd.descriptor)
+      // );
 
-      results.forEach((bestMatch, i) => {
-        const box = fullFaceDescriptions[i].detection.box;
-        const text = bestMatch.toString();
-        const drawBox = new faceapi.draw.DrawBox(box, { label: text });
-        if (bestMatch._label != "unknown") {
-          this.hendlerDataUp(bestMatch._label);
-          clearTimeout(times);
-          eV.pause();
-        }
-        // drawBox.draw(canvas);
-      });
+      // results.forEach((bestMatch, i) => {
+      //   console.log();
+      //   const box = fullFaceDescriptions[i].detection.box;
+      //   const text = bestMatch.toString();
+      //   const drawBox = new faceapi.draw.DrawBox(box, { label: text });
+      //   if (bestMatch._label != "unknown") {
+      //     // console.log(bestMatch._label)
+      //     this.hendlerDataUp(bestMatch._label);
+      //     clearTimeout(times);
+      //     eV.pause();
+      //   } else if (bestMatch._label == "unknown" && ii > 30) {
+      //     this.hendlerMissingData(bestMatch._label);
+      //     clearTimeout(times);
+      //     eV.pause();
+      //   }
+      //   // drawBox.draw(canvas);
+      // });
     }, 300);
   };
 
@@ -122,7 +167,7 @@ export default class FaceVidio extends React.Component {
   };
 
   play = () => {
-    console.log("tes")
+    console.log("tes");
     let el = this.state.vd;
     const e = $("#videoElement").get(0);
     let displaySize = {
@@ -144,6 +189,9 @@ export default class FaceVidio extends React.Component {
       <div>
         <Card className='c-card mt-1' style={{ border: "none" }} value='ok'>
           <Card.Body>
+            <button onClick={()=>{
+              console.log(this.imageToBase64('http://127.0.0.1:8000/img/1616993896.jpg'));
+            }}>cek</button>
             <video
               width='100%'
               height='auto'
@@ -153,7 +201,8 @@ export default class FaceVidio extends React.Component {
               controls
               id='videoElement'
               onLoadedMetadata={this.face.bind()}
-              src={Vego}></video>
+              src={Vego}
+              ></video>
             <canvas id='canvas' className='overlay' style={{ left: "0" }} />
           </Card.Body>
         </Card>

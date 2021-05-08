@@ -1,13 +1,40 @@
 @import "~bootstrap/scss/bootstrap";
 
+@mixin f-x-unit($unit:'px') {
+  $size: 61;
+  @if $unit=='rem' {
+    $size: 17;
+  }
+
+  @else if $unit=='em' {
+    $size: 31;
+  }
+
+  @else {
+    $size: 61;
+  }
+
+  @for $i from 1 to $size {
+    ._f-#{$i}-#{$unit} {
+      font-size: #{$i}#{$unit} !important;
+    }
+  }
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
 }
-img{
+
+a {
+  text-decoration: none !important;
+}
+
+img {
   width: 100%;
 }
+
 .App {
   text-align: center;
 }
@@ -47,3 +74,17 @@ img{
     transform: rotate(360deg);
   }
 }
+
+.ta-left {
+  text-align: left;
+}
+
+.card {
+  width: 100% !important;
+}
+
+
+@include f-x-unit;
+@include f-x-unit('px');
+@include f-x-unit('rem');
+@include f-x-unit('em');

@@ -13,4 +13,22 @@ export default class rowdata {
       img: "egi",
     },
   ];
+  kecamatan = () => [
+    {
+      id_kec: "1",
+      nama: "pangean",
+    },
+    {
+      id_kec: "2",
+      nama: "benai",
+    },
+    {
+      id_kec: "3",
+      nama: "Sentajo Raya",
+    },
+    {
+      id_kec: "4",
+      nama: "Jakarta",
+    },
+  ];
 }

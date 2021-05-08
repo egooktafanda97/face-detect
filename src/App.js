@@ -1,12 +1,17 @@
 import logo from "./logo.svg";
 import "./App.scss";
-import Main from "./view/main";
-
+// import Main from "./view/pages/dashboard/Dashboard";
+import { BrowserRouter, Route, Link, Switch } from "react-router-dom";
+import Routing from "./router/index";
+import Login from './login';
 function App() {
   return (
-    <div className='App'>
-      <Main />
-    </div>
+    <BrowserRouter>
+      <div className='App'>
+        <Routing />
+        {/* <Login/> */}
+      </div>
+    </BrowserRouter>
   );
 }
 

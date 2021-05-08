@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { HashRouter, Router, Route, Link, Switch } from "react-router-dom";
 import Navigasi from "./layout/nav/Navigasi";
 import "./_main.scss";
 import FaceImg from "./components/face-img/face";
@@ -7,6 +8,9 @@ import Details from "./components/face-vidio/details";
 import Card from "react-bootstrap/Card";
 import basis from "./db/data";
 
+// ////////
+import inp from "./components/input-pacu/index";
+
 export default class Main extends React.Component {
   render() {
     return (
@@ -14,17 +18,18 @@ export default class Main extends React.Component {
         <aside className='wrapper'>
           <Navigasi />
         </aside>
-        <main>
-          <Face />
-        </main>
       </div>
     );
   }
 }
 
-
-
-
+function Dashboard() {
+  return (
+    <main>
+      <Face />
+    </main>
+  );
+}
 
 //  Component Face-recognition
 class Face extends Component {
@@ -72,7 +77,7 @@ class Face extends Component {
                 textAlign: "left",
               }}>
               <button
-              className="btn btn-primary btn-sm"
+                className='btn btn-primary btn-sm'
                 onClick={() => {
                   this.pushData.current.play();
                 }}>
